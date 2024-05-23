@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latest Releases</title>
+</head>
+<body>
+    <div id="latest-releases"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var labelId = 'INSERT_LABEL_ID_HERE'; // Replace with dynamic label ID if available
+            fetch(`/.netlify/functions/latestReleases?label_id=${labelId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.releases) {
+                        var releases = data.releases;
+                        var releasesHtml = '<ul>';
+                        releases.forEach(release => {
+                            releasesHtml += `<li>${release.title} - ${release.year}</li>`;
+                        });
+                        releasesHtml += '</ul>';
+                        document.getElementById('latest-releases').innerHTML = releasesHtml;
+                    } else {
+                        document.getElementById('latest-releases').innerHTML = 'No releases found';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching latest releases:', error);
+                    document.getElementById('latest-releases').innerHTML = 'Error fetching latest releases';
+                });
+        });
+    </script>
+</body>
+</html>
